@@ -5,9 +5,7 @@ import com.example.todo.com.example.model.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @ResponseBody
@@ -28,6 +26,10 @@ public class TodoController {
         model.addAttribute("todos", repository.findAll());
         return (List<Todo>) repository.findAll();
     }
-
+    @RequestMapping(value ="/delete/{id}", method = RequestMethod.GET)
+    public String deleteList(@PathVariable("id") Long id, Model model){
+        repository.delete(id);
+        return "redirect:/todolist";
+    }
 
 }

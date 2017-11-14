@@ -12,7 +12,7 @@ public class Todo {
     private Long id;
     private String item;
     public Todo (){
-        
+
     }
 
     public Todo(String item) {
