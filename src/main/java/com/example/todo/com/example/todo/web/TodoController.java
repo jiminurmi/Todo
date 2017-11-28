@@ -5,15 +5,21 @@ import com.example.todo.com.example.model.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 import java.util.List;
-@ResponseBody
+
 @Controller
 public class TodoController {
-    @Autowired
-    private TodoRepository repository;
 
+    @RequestMapping(value="/")
+    public String index(){
+        return "index.html";
+    }
+
+
+/*
     @RequestMapping("/add")
     public String add(Model model){
         Todo todo = new Todo("muista koodata");
@@ -31,5 +37,5 @@ public class TodoController {
         repository.delete(id);
         return "redirect:/todolist";
     }
-
+*/
 }

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>To Do App</title>
+</head>
+<body>
+<div class='container'>
+    <div id='root'></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js"></script>
+<script src="https://fb.me/react-dom-15.0.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<script type="text/babel">
+    class App extends React.Component {
+        constructor(props) {
+            super(props);
+
+            this.deleteTodo = this.deleteTodo.bind(this);
+            this.createTodo = this.createTodo.bind(this);
+
+            this.state = {
+                todos: [],
+            };
+        }
+
+        componentDidMount() {
+            this.loadTodoFromServer();
+        }
+        //Listaa
+        loadTodosFromServer() {
+            fetch('http://localhost:8080/api/todolist')
+                .then((response) => response.json())
+                .then((data) => {
+                    this.setState({
+                        todos: data._embedded.todos
+                    });
+                    console.log(this.state.todos.name)
+                });
+        }
+
+        //Delete Todos
+        deleteTodo(todo) {
+            fetch(todo._links.self.href, {method: 'DELETE'})
+                .then(res => this.loadTodosFromServer())
+                .catch(err => console.error(err))
+        }
+
+        //Create Todos
+        createTodo(todo) {
+            fetch('http://localhost:8080/api/todos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(todo)
+            })
+                .then(
+                    res => this.loadTodosFromServer()
+                )
+                .catch(err => console.error(err))
+        }
+
+        render() {
+            return (
+                    <div>
+                        <TodoForm
+                                createTodo={this.createTodo}/>
+                        <TodoTable
+                                deleteTodo={this.deleteTodo}
+                                todos={this.state.todo}/>
+                    </div>
+            );
+        }
+    }
+
+    class TodoTable extends React.Component {
+        constructor(props) {
+            super(props);
+        }
+
+
+        render() {
+            var todo = this.props.todos.map(todo => <Todo
+                    key={todo._links.self.href}
+                    deleteTodo= {this.props.deleteTodo}
+                    todo={todo}/>);
+            return (
+                    <table className="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>To Do</th>
+                            <th>Calendar</th>
+                        </tr>
+                        </thead>
+                        <tbody>{todos}</tbody>
+                    </table>
+            );
+        }
+    }
+
+    class Todo extends React.Component {
+        constructor(props) {
+            super(props);
+            this.deleteTodo = this.deleteTodo.bind(this);
+        }
+
+        deleteTodo() {
+            this.props.deleteTodo(this.props.todo);
+        }
+
+        render(){
+            return (
+                    <tr>
+                        <td>{this.props.todo.title}</td>
+                        <td>{this.props.todo.item}</td>
+                        <td>{this.props.todo.calendar}</td>
+                        <td>
+                            <button className="btn btn-danger" onClick={this.deleteTodo}>Delete</button>
+                        </td>
+                    </tr>
+            );
+        }
+    }
+
+    class TodoForm extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {title: '', item: '', calendar: ''};
+            this.handleSubmit = this.handleSubmit.bind(this);
+            this.handleChange = this.handleChange.bind(this);
+        }
+
+        handleChange(event) {
+            this.setState(
+                {[event.target.name]: event.target.value}
+            )
+        }
+
+        handleSubmit(event) {
+            event.preventDefault();
+            var newTodo = {
+                title: this.state.title,
+                item: this.state.item,
+                calendar: this.state.calendar,
+            };
+            this.props.createTodo(newTodo);
+        }
+
+        render() {
+            return (
+                    <div className="panel panel-default">
+                        <h1>To Do List</h1>
+                        <div className="panel-heading">Add new To Do</div>
+                        <div className="panel-body">
+                            <form className="form-inline">
+                                <div className="col-md-2">
+                                    <input type="text" placeholder="Title" className="form-control" name="title"
+                                           onChange={this.handleChange}/>
+                                </div>
+                                <div className="col-md-2">
+                                    <input type="text" placeholder="Item" className="form-control" name="item"
+                                           onChange={this.handleChange}/>
+                                </div>
+                                <div className="col-md-2">
+                                    <input type="date" placeholder="Calendar" className="form-control"
+                                           name="calendar" onChange={this.handleChange}/>
+                                </div>
+                                <div className="col-md-2">
+                                    <button className="btn btn-success" onClick={this.handleSubmit}>Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+            );
+        }
+    }
+    ReactDOM.render(<App/>, document.getElementById('root'));
+</script>
+
+</body>
+</html>
