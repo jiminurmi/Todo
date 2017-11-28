@@ -1,4 +1,4 @@
-package com.example.todo.com.example.model;
+package com.example.todo.model;
 
 import org.springframework.data.repository.CrudRepository;
 

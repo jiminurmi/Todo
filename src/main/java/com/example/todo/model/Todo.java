@@ -1,4 +1,4 @@
-package com.example.todo.com.example.model;
+package com.example.todo.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,14 +12,14 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
-    private String item;
-    private Date calendar;
+    private String itemi;
+    private String calendar;
     public Todo (){
 
     }
 
-    public Todo(String item) {
-        this.item = item;
+    public Todo(String itemi) {
+        this.itemi = itemi;
     }
 
     public Long getId() {
@@ -30,17 +30,17 @@ public class Todo {
         this.id = id;
     }
 
-    public String getItem() {
-        return item;
+    public String getitemi() {
+        return itemi;
     }
 
-    public void setItem(String item) {
-        this.item = item;
+    public void setitemi(String itemi) {
+        this.itemi = itemi;
     }
 
-    public Date getCalendar() { return calendar; }
+    public String getCalendar() { return calendar; }
 
-    public void setCalendar(Date calendar) { this.calendar = calendar; }
+    public void setCalendar(String calendar) { this.calendar = calendar; }
 
     public String getTitle() { return title; }
 

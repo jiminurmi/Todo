@@ -21,20 +21,20 @@
             this.createTodo = this.createTodo.bind(this);
 
             this.state = {
-                todos: [],
+                todo: [],
             };
         }
 
         componentDidMount() {
-            this.loadTodoFromServer();
+            this.loadTodosFromServer();
         }
         //Listaa
         loadTodosFromServer() {
-            fetch('http://localhost:8080/api/todolist')
+            fetch('http://localhost:8080/api/todos')
                 .then((response) => response.json())
                 .then((data) => {
                     this.setState({
-                        todos: data._embedded.todos
+                        todo: data._embedded.todos
                     });
                     console.log(this.state.todos.name)
                 });
@@ -82,7 +82,7 @@
 
 
         render() {
-            var todo = this.props.todos.map(todo => <Todo
+            var todos = this.props.todos.map(todo => <Todo
                     key={todo._links.self.href}
                     deleteTodo= {this.props.deleteTodo}
                     todo={todo}/>);
@@ -115,7 +115,7 @@
             return (
                     <tr>
                         <td>{this.props.todo.title}</td>
-                        <td>{this.props.todo.item}</td>
+                        <td>{this.props.todo.itemi}</td>
                         <td>{this.props.todo.calendar}</td>
                         <td>
                             <button className="btn btn-danger" onClick={this.deleteTodo}>Delete</button>
@@ -128,7 +128,7 @@
     class TodoForm extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {title: '', item: '', calendar: ''};
+            this.state = {title: '', itemi: '', calendar: ''};
             this.handleSubmit = this.handleSubmit.bind(this);
             this.handleChange = this.handleChange.bind(this);
         }
@@ -143,7 +143,7 @@
             event.preventDefault();
             var newTodo = {
                 title: this.state.title,
-                item: this.state.item,
+                itemi: this.state.itemi,
                 calendar: this.state.calendar,
             };
             this.props.createTodo(newTodo);
@@ -161,7 +161,7 @@
                                            onChange={this.handleChange}/>
                                 </div>
                                 <div className="col-md-2">
-                                    <input type="text" placeholder="Item" className="form-control" name="item"
+                                    <input type="text" placeholder="Your To Do" className="form-control" name="itemi"
                                            onChange={this.handleChange}/>
                                 </div>
                                 <div className="col-md-2">
